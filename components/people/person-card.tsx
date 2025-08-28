@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { User, Plus, ChevronDown, ChevronRight, Phone, Mail, FileText, Trash2 } from 'lucide-react'
+import { User, Plus, ChevronDown, ChevronRight, Phone, Mail, FileText, Trash2, Edit } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { formatCurrency, calculateBalance } from '@/lib/utils'
 import { TransactionList } from '@/components/transactions/transaction-list'
@@ -43,73 +43,92 @@ export function PersonCard({ person, transactions, onPersonUpdate, onTransaction
 
   return (
     <>
-      <div className="glass-card rounded-xl p-6 hover:shadow-2xl transition-all duration-300">
+      <div className="glass-card rounded-xl p-4 sm:p-6 hover:shadow-2xl transition-all duration-300">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
               <User className="w-6 h-6 text-primary" />
             </div>
-            <div>
-              <h3 className="text-xl font-semibold text-white">{person.name}</h3>
-              <div className="flex items-center space-x-4 text-sm text-gray-300">
+            <div className="min-w-0 flex-1">
+              <h3 className="text-xl font-semibold text-white truncate">{person.name}</h3>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-gray-300">
                 {person.email && (
                   <div className="flex items-center space-x-1">
-                    <Mail className="w-3 h-3" />
-                    <span>{person.email}</span>
+                    <Mail className="w-3 h-3 flex-shrink-0" />
+                    <span className="truncate">{person.email}</span>
                   </div>
                 )}
                 {person.phone && (
                   <div className="flex items-center space-x-1">
-                    <Phone className="w-3 h-3" />
-                    <span>{person.phone}</span>
+                    <Phone className="w-3 h-3 flex-shrink-0" />
+                    <span className="truncate">{person.phone}</span>
                   </div>
                 )}
               </div>
             </div>
           </div>
           
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center justify-end space-x-2">
             <Button
               variant="outline"
               size="sm"
               onClick={() => setShowEditPerson(true)}
-              className="text-xs"
+              className="p-2 h-9 w-9"
+              title="Edit person"
             >
-              Edit
+              <Edit className="w-4 h-4" />
             </Button>
             <Button
               variant="destructive"
               size="sm"
               onClick={() => setShowDeleteConfirm(true)}
-              className="text-xs"
+              className="p-2 h-9 w-9"
+              title="Delete person"
             >
-              Delete
+              <Trash2 className="w-4 h-4" />
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={() => setIsExpanded(!isExpanded)}
-              className="text-xs"
+              className="p-2 h-9 w-9"
+              title={isExpanded ? "Collapse" : "Expand"}
             >
               {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
             </Button>
           </div>
         </div>
 
-        {/* Balance Display */}
-        <div className="mb-4">
-          <div className={`text-2xl font-bold ${
-            isPositive ? 'text-green-400' : 
-            isNegative ? 'text-red-400' : 
-            'text-gray-300'
-          }`}>
-            {formatCurrency(Math.abs(balance))}
+        {/* Balance Statistics */}
+        <div className="grid grid-cols-3 gap-3 mb-4">
+          <div className="text-center p-3 bg-white/5 rounded-lg">
+            <div className="text-lg font-bold text-green-400">
+              {formatCurrency(transactions.filter(t => t.type === 'lent').reduce((sum, t) => sum + t.amount, 0))}
+            </div>
+            <div className="text-xs text-gray-400">Lent</div>
           </div>
-          <div className="text-sm text-gray-400">
-            {isPositive ? 'They owe you' : 
-             isNegative ? 'You owe them' : 
-             'All settled up'}
+          
+          <div className="text-center p-3 bg-white/5 rounded-lg">
+            <div className="text-lg font-bold text-red-400">
+              {formatCurrency(transactions.filter(t => t.type === 'borrowed').reduce((sum, t) => sum + t.amount, 0))}
+            </div>
+            <div className="text-xs text-gray-400">Borrowed</div>
+          </div>
+          
+          <div className="text-center p-3 bg-white/5 rounded-lg">
+            <div className={`text-lg font-bold ${
+              isPositive ? 'text-green-400' : 
+              isNegative ? 'text-red-400' : 
+              'text-gray-300'
+            }`}>
+              {formatCurrency(Math.abs(balance))}
+            </div>
+            <div className="text-xs text-gray-400">
+              {isPositive ? 'Balance' : 
+               isNegative ? 'Balance' : 
+               'Settled'}
+            </div>
           </div>
         </div>
 
@@ -117,11 +136,12 @@ export function PersonCard({ person, transactions, onPersonUpdate, onTransaction
         <div className="flex items-center space-x-2 mb-4">
           <Button
             onClick={() => setShowAddTransaction(true)}
-            className="flex-1"
+            className="flex-1 sm:flex-none sm:w-auto"
             size="sm"
           >
             <Plus className="w-4 h-4 mr-2" />
-            Add Transaction
+            <span className="hidden sm:inline">Add Transaction</span>
+            <span className="sm:hidden">Add</span>
           </Button>
         </div>
 
@@ -130,7 +150,7 @@ export function PersonCard({ person, transactions, onPersonUpdate, onTransaction
           <div className="mb-4 p-3 bg-white/5 rounded-lg">
             <div className="flex items-start space-x-2">
               <FileText className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
-              <p className="text-sm text-gray-300">{person.notes}</p>
+              <p className="text-sm text-gray-300 break-words">{person.notes}</p>
             </div>
           </div>
         )}
