@@ -130,7 +130,7 @@ export function EditTransactionModal({
             Date *
           </label>
           <DatePicker
-            value={formData.date}
+            value={formData.date || ''}
             onChange={(date) => setFormData({ ...formData, date })}
             placeholder="Select transaction date"
           />
