@@ -36,7 +36,7 @@ export function DatePicker({ value, onChange, placeholder = "Select date", class
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const calculateDropdownPosition = () => {
+  const calculateDropdownPosition = (): { vertical: 'bottom' | 'top'; horizontal: 'left' | 'right' } => {
     if (!datePickerRef.current) return { vertical: 'bottom', horizontal: 'left' }
     
     const rect = datePickerRef.current.getBoundingClientRect()
@@ -63,7 +63,9 @@ export function DatePicker({ value, onChange, placeholder = "Select date", class
 
   const handleToggle = () => {
     if (!isOpen) {
-      setDropdownPosition(calculateDropdownPosition())
+      const position = calculateDropdownPosition()
+      setDropdownPosition(position.vertical)
+      setDropdownAlignment(position.horizontal)
     }
     setIsOpen(!isOpen)
   }
@@ -149,12 +151,12 @@ export function DatePicker({ value, onChange, placeholder = "Select date", class
         <Calendar className="w-4 h-4 text-gray-400" />
       </Button>
 
-      {isOpen && (
-        <div className={`absolute z-50 bg-gray-900 border border-gray-700 rounded-lg shadow-xl p-4 min-w-[280px] ${
-          dropdownPosition === 'bottom' 
-            ? 'top-full left-0 mt-2' 
-            : 'bottom-full left-0 mb-2'
-        }`}>
+             {isOpen && (
+         <div className={`absolute z-50 bg-gray-900 border border-gray-700 rounded-lg shadow-xl p-4 min-w-[280px] max-w-[90vw] ${
+           dropdownPosition === 'bottom' 
+             ? `top-full mt-2 ${dropdownAlignment === 'left' ? 'left-0' : 'right-0'}`
+             : `bottom-full mb-2 ${dropdownAlignment === 'left' ? 'left-0' : 'right-0'}`
+         }`}>
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
             <Button
