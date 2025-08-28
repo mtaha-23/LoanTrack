@@ -5,6 +5,7 @@ import { Modal } from '@/components/ui/modal'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
+import { DatePicker } from '@/components/ui/date-picker'
 import { updateTransaction } from '@/lib/firebase-helpers'
 import { Transaction, TransactionUpdate } from '@/lib/types'
 
@@ -128,11 +129,10 @@ export function EditTransactionModal({
           <label className="block text-sm font-medium text-white mb-2">
             Date *
           </label>
-          <Input
-            type="date"
+          <DatePicker
             value={formData.date}
-            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-            required
+            onChange={(date) => setFormData({ ...formData, date })}
+            placeholder="Select transaction date"
           />
         </div>
 
