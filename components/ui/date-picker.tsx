@@ -36,6 +36,14 @@ export function DatePicker({ value, onChange, placeholder = "Select date", class
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  // Helper function to format date consistently in local timezone
+  const formatDateForInput = (date: Date): string => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
   const calculateDropdownPosition = (): { vertical: 'bottom' | 'top'; horizontal: 'left' | 'right' } => {
     if (!datePickerRef.current) return { vertical: 'bottom', horizontal: 'left' }
     
@@ -92,12 +100,14 @@ export function DatePicker({ value, onChange, placeholder = "Select date", class
   const handleDateSelect = (day: number) => {
     const newDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
     setSelectedDate(newDate)
-    onChange(newDate.toISOString().split('T')[0])
+    onChange(formatDateForInput(newDate))
     setIsOpen(false)
   }
 
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', {
+    // Ensure we're working with local date to avoid timezone issues
+    const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
+    return localDate.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric'
@@ -200,12 +210,12 @@ export function DatePicker({ value, onChange, placeholder = "Select date", class
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => {
-                const today = new Date()
-                setSelectedDate(today)
-                onChange(today.toISOString().split('T')[0])
-                setIsOpen(false)
-              }}
+                             onClick={() => {
+                 const today = new Date()
+                 setSelectedDate(today)
+                 onChange(formatDateForInput(today))
+                 setIsOpen(false)
+               }}
               className="w-full"
             >
               Today
