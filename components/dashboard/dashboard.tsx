@@ -138,15 +138,15 @@ export function Dashboard() {
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="glass-card rounded-xl p-6">
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-green-400" />
+        <div className="grid grid-cols-3 gap-3 sm:gap-6 mb-8">
+          <div className="glass-card rounded-xl p-3 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-12 sm:h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto sm:mx-0">
+                <TrendingUp className="w-4 h-4 sm:w-6 sm:h-6 text-green-400" />
               </div>
-              <div>
-                <p className="text-gray-400 text-sm">Total Balance</p>
-                <p className={`text-2xl font-bold ${
+              <div className="text-center sm:text-left">
+                <p className="text-gray-400 text-xs sm:text-sm">Total Balance</p>
+                <p className={`text-lg sm:text-2xl font-bold ${
                   getTotalBalance() > 0 ? 'text-green-400' : 
                   getTotalBalance() < 0 ? 'text-red-400' : 
                   'text-white'
@@ -157,28 +157,28 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="glass-card rounded-xl p-6">
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-blue-400" />
+          <div className="glass-card rounded-xl p-3 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-12 sm:h-12 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto sm:mx-0">
+                <DollarSign className="w-4 h-4 sm:w-6 sm:h-6 text-blue-400" />
               </div>
-              <div>
-                <p className="text-gray-400 text-sm">Total Lent</p>
-                <p className="text-2xl font-bold text-green-400">
+              <div className="text-center sm:text-left">
+                <p className="text-gray-400 text-xs sm:text-sm">Total Lent</p>
+                <p className="text-lg sm:text-2xl font-bold text-green-400">
                   ${getTotalLent().toFixed(2)}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="glass-card rounded-xl p-6">
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
-                <TrendingDown className="w-6 h-6 text-red-400" />
+          <div className="glass-card rounded-xl p-3 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-12 sm:h-12 bg-red-500/20 rounded-full flex items-center justify-center mx-auto sm:mx-0">
+                <TrendingDown className="w-4 h-4 sm:w-6 sm:h-6 text-red-400" />
               </div>
-              <div>
-                <p className="text-gray-400 text-sm">Total Borrowed</p>
-                <p className="text-2xl font-bold text-red-400">
+              <div className="text-center sm:text-left">
+                <p className="text-gray-400 text-xs sm:text-sm">Total Borrowed</p>
+                <p className="text-lg sm:text-2xl font-bold text-red-400">
                   ${getTotalBorrowed().toFixed(2)}
                 </p>
               </div>

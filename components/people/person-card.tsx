@@ -100,35 +100,19 @@ export function PersonCard({ person, transactions, onPersonUpdate, onTransaction
           </div>
         </div>
 
-        {/* Balance Statistics */}
-        <div className="grid grid-cols-3 gap-3 mb-4">
-          <div className="text-center p-3 bg-white/5 rounded-lg">
-            <div className="text-lg font-bold text-green-400">
-              {formatCurrency(transactions.filter(t => t.type === 'lent').reduce((sum, t) => sum + t.amount, 0))}
-            </div>
-            <div className="text-xs text-gray-400">Lent</div>
+        {/* Balance Display */}
+        <div className="mb-4">
+          <div className={`text-2xl font-bold ${
+            isPositive ? 'text-green-400' : 
+            isNegative ? 'text-red-400' : 
+            'text-gray-300'
+          }`}>
+            {formatCurrency(Math.abs(balance))}
           </div>
-          
-          <div className="text-center p-3 bg-white/5 rounded-lg">
-            <div className="text-lg font-bold text-red-400">
-              {formatCurrency(transactions.filter(t => t.type === 'borrowed').reduce((sum, t) => sum + t.amount, 0))}
-            </div>
-            <div className="text-xs text-gray-400">Borrowed</div>
-          </div>
-          
-          <div className="text-center p-3 bg-white/5 rounded-lg">
-            <div className={`text-lg font-bold ${
-              isPositive ? 'text-green-400' : 
-              isNegative ? 'text-red-400' : 
-              'text-gray-300'
-            }`}>
-              {formatCurrency(Math.abs(balance))}
-            </div>
-            <div className="text-xs text-gray-400">
-              {isPositive ? 'Balance' : 
-               isNegative ? 'Balance' : 
-               'Settled'}
-            </div>
+          <div className="text-sm text-gray-400">
+            {isPositive ? 'They owe you' : 
+             isNegative ? 'You owe them' : 
+             'All settled up'}
           </div>
         </div>
 
