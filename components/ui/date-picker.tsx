@@ -15,6 +15,8 @@ export function DatePicker({ value, onChange, placeholder = "Select date", class
   const [isOpen, setIsOpen] = useState(false)
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState(value ? new Date(value) : new Date())
+  const [dropdownPosition, setDropdownPosition] = useState<'bottom' | 'top'>('bottom')
+  const [dropdownAlignment, setDropdownAlignment] = useState<'left' | 'right'>('left')
   const datePickerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -33,6 +35,38 @@ export function DatePicker({ value, onChange, placeholder = "Select date", class
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
+
+  const calculateDropdownPosition = () => {
+    if (!datePickerRef.current) return { vertical: 'bottom', horizontal: 'left' }
+    
+    const rect = datePickerRef.current.getBoundingClientRect()
+    const viewportHeight = window.innerHeight
+    const viewportWidth = window.innerWidth
+    const dropdownHeight = 320 // Approximate height of the calendar dropdown
+    const dropdownWidth = 280 // Width of the calendar dropdown
+    
+    let vertical: 'bottom' | 'top' = 'bottom'
+    let horizontal: 'left' | 'right' = 'left'
+    
+    // Check vertical position
+    if (rect.bottom + dropdownHeight > viewportHeight && rect.top > dropdownHeight) {
+      vertical = 'top'
+    }
+    
+    // Check horizontal position
+    if (rect.left + dropdownWidth > viewportWidth) {
+      horizontal = 'right'
+    }
+    
+    return { vertical, horizontal }
+  }
+
+  const handleToggle = () => {
+    if (!isOpen) {
+      setDropdownPosition(calculateDropdownPosition())
+    }
+    setIsOpen(!isOpen)
+  }
 
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear()
@@ -106,7 +140,7 @@ export function DatePicker({ value, onChange, placeholder = "Select date", class
       <Button
         type="button"
         variant="outline"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleToggle}
         className="w-full justify-between text-left font-normal"
       >
         <span className={value ? 'text-white' : 'text-gray-400'}>
@@ -116,7 +150,11 @@ export function DatePicker({ value, onChange, placeholder = "Select date", class
       </Button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 z-50 bg-gray-900 border border-gray-700 rounded-lg shadow-xl p-4 min-w-[280px]">
+        <div className={`absolute z-50 bg-gray-900 border border-gray-700 rounded-lg shadow-xl p-4 min-w-[280px] ${
+          dropdownPosition === 'bottom' 
+            ? 'top-full left-0 mt-2' 
+            : 'bottom-full left-0 mb-2'
+        }`}>
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
             <Button
