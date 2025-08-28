@@ -69,7 +69,7 @@ export function PersonCard({ person, transactions, onPersonUpdate, onTransaction
             </div>
           </div>
           
-          <div className="flex items-center justify-end space-x-2">
+          <div className="hidden sm:flex items-center justify-end space-x-2">
             <Button
               variant="outline"
               size="sm"
@@ -100,19 +100,54 @@ export function PersonCard({ person, transactions, onPersonUpdate, onTransaction
           </div>
         </div>
 
-        {/* Balance Display */}
+        {/* Balance Display with Action Buttons */}
         <div className="mb-4">
-          <div className={`text-2xl font-bold ${
-            isPositive ? 'text-green-400' : 
-            isNegative ? 'text-red-400' : 
-            'text-gray-300'
-          }`}>
-            {formatCurrency(Math.abs(balance))}
-          </div>
-          <div className="text-sm text-gray-400">
-            {isPositive ? 'They owe you' : 
-             isNegative ? 'You owe them' : 
-             'All settled up'}
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <div className={`text-2xl font-bold ${
+                isPositive ? 'text-green-400' : 
+                isNegative ? 'text-red-400' : 
+                'text-gray-300'
+              }`}>
+                {formatCurrency(Math.abs(balance))}
+              </div>
+              <div className="text-sm text-gray-400">
+                {isPositive ? 'They owe you' : 
+                 isNegative ? 'You owe them' : 
+                 'All settled up'}
+              </div>
+            </div>
+            
+            {/* Action Buttons - Show on small screens next to balance */}
+            <div className="flex items-center space-x-1 sm:hidden">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowEditPerson(true)}
+                className="p-2 h-8 w-8"
+                title="Edit person"
+              >
+                <Edit className="w-3 h-3" />
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => setShowDeleteConfirm(true)}
+                className="p-2 h-8 w-8"
+                title="Delete person"
+              >
+                <Trash2 className="w-3 h-3" />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="p-2 h-8 w-8"
+                title={isExpanded ? "Collapse" : "Expand"}
+              >
+                {isExpanded ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+              </Button>
+            </div>
           </div>
         </div>
 
